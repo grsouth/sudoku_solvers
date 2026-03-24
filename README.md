@@ -27,3 +27,5 @@ solve():
 #### Algorithm X and Dancing Links
 
 This is not actually the best way to solve a Sudoku puzzle.
+
+Sudoku is an example of what a mathematician would call an 'exact cover problem'.
