@@ -12,6 +12,7 @@ typedef struct {
 int solve(Sudoku *s);
 int find_best_cell(const Sudoku *s);
 void print_puzzle(const char puzzle[82]);
+double timespec_elapsed_ms(struct timespec start, struct timespec end);
 
 int main(int argc, char *argv[]) {
     printf("sudoku solver (c)\n");
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // figure out how many times to repeat (for benchmarking)
     int repeat_count = 1;
     if (argc >= 3) {
         repeat_count = atoi(argv[2]);
@@ -38,7 +40,7 @@ int main(int argc, char *argv[]) {
     // choose puzzle
     const char *puzzle_file;
     if (argv[1][0] == 'e') {
-        puzzle_file = "puzzles/easy.txt";
+        puzzle_file = "../puzzles/easy.txt";
     } else if (argv[1][0] == 'h') {
         puzzle_file = "puzzles/hard.txt";
     } else {
@@ -96,12 +98,16 @@ int main(int argc, char *argv[]) {
     double elapsed_ms = 0.0;
 
     if (repeat_count == 1) {
-        clock_t start = clock();
+        struct timespec start;
+        struct timespec end;
+        clock_gettime(CLOCK_MONOTONIC, &start);
         solved = solve(&sudoku);
-        clock_t end = clock();
-        elapsed_ms = (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_ms = timespec_elapsed_ms(start, end);
     } else {
-        clock_t start = clock();
+        struct timespec start;
+        struct timespec end;
+        clock_gettime(CLOCK_MONOTONIC, &start);
 
         for (int run = 0; run < repeat_count; run++) {
             Sudoku benchmark = sudoku;
@@ -111,8 +117,8 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        clock_t end = clock();
-        elapsed_ms = (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_ms = timespec_elapsed_ms(start, end);
     }
 
     if (!solved) {
@@ -124,16 +130,11 @@ int main(int argc, char *argv[]) {
             printf("\nSolved puzzle:\n");
             print_puzzle(sudoku.puzzle);
             printf("\nSolved in %.3f ms\n", elapsed_ms);
-        } else {
+        } else { // if benchmarking, skip the pretty print and just show the timing results
             printf("Solved %d runs in %.3f s\n", repeat_count, elapsed_ms / 1000.0);
             printf("Average: %.6f ms per run\n", elapsed_ms / repeat_count);
         }
     }
-
-
-
-
-
     return 0;
 }
 
@@ -199,6 +200,17 @@ int find_best_cell(const Sudoku *s) {
 }
 
 // print the puzzle in a pretty way.
+// Like this:
+// 5 3 - | - 7 - | - - -
+// 6 - - | 1 9 5 | - - -
+// - 9 8 | - - - | - 6 -
+// ------+-------+------
+// 8 - - | - 6 - | - - 3
+// 4 - - | 8 - 3 | - - 1
+// 7 - - | - 2 - | - - 6
+// ------+-------+------
+// - 6 - | - - - | 2 8 -
+// - - - | 4 1 9 | - - 5    
 void print_puzzle(const char puzzle[82]) {
     for (int i = 0; i < 81; i++) {
         char c = puzzle[i];
@@ -223,4 +235,10 @@ void print_puzzle(const char puzzle[82]) {
             }
         }
     }
+}
+
+double timespec_elapsed_ms(struct timespec start, struct timespec end) {
+    time_t seconds = end.tv_sec - start.tv_sec;
+    long nanoseconds = end.tv_nsec - start.tv_nsec;
+    return (double)seconds * 1000.0 + (double)nanoseconds / 1000000.0;
 }
