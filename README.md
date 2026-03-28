@@ -1,5 +1,42 @@
 # sudoku_solvers
 
+## C Alternatives
+
+The main purpose of this project is to compare several different languages that are often billed as alternatives to C. 
+
+I first learned to program in C and C++, so I have a certain fondness for the language that might make it hard for me to be objective about its rough edges. I want to see how the alternatives stack up in terms of both ease of development and performance.
+
+The languages I want to compare are:
+- C
+- Rust
+- Go
+- Zig
+
+## Puzzle Format
+
+Puzzle files live in the `puzzles/` directory. Each puzzle is stored as a single line of 81 characters, using the digits 1 through 9 for filled cells and `0` for empty cells.
+
+For example:
+
+```text
+530070000600195000098000060800060003400803001700020006060000280000419005000080079
+```
+
+Corresponds to:
+```text
+5 3 - | 7 - - | - - -
+6 - - | 1 9 5 | - - -
+- 9 8 | - - - | - 6 -
+------+-------+------
+8 - - | - 6 - | - - 3
+4 - - | 8 - 3 | - - 1
+7 - - | - 2 - | - - 6
+------+-------+------
+- 6 - | - - - | 2 8 -
+- - - | 4 1 9 | - - 5
+- - - | - 8 - | - 7 9
+```
+
 ## Algorithm
 
 I want to keep the core algorithm simple and repeatable. The easiest way to write a sudoku solver is a recursive algorithm that, for each empty square, selects a legal number and continues to the next empty square. Of course, a number can be legal in the current position and still not actually be part of the final solution. When the recursive chain hits a dead end, it'll 'return false' back upwards to try a different legal number in that square, and continue again from there.
@@ -28,9 +65,9 @@ solve():
 
 I want to briefly acknowledge that this is not actually the best way to solve a Sudoku puzzle.
 
-Sudoku is an example of what a mathematician would call an 'exact cover problem'. Many papers have been written on this subject. A very clever (but much more complex) way to solve a problem like this is to use Knuth's "Algorithm X", and implement it using the "Dancing Links" technique.
+Sudoku is an example of what a mathematician would call an 'exact cover problem'. Many papers have been written on this subject. A very clever (but much more complex) way to solve a problem like this is to use Knuth's "Algorithm X", and implement it using the "Dancing Links" technique. This would involve using doubly linked list to represent all of the constraints.
 
-It's worth noting that a more resource-efficient implementation is possible. If I were building this for a production setting where raw performance mattered, I'd probably revisit those papers and break out the doubly linked lists.
+If I were building this for a production setting where raw performance mattered, I'd try to do it this way. For the sake of the simplicity of this project though, I'll stick to the more straightforward approach.
 
 #### "find an empty cell"
 
@@ -52,9 +89,8 @@ For example, if a row already contains 1, 4, and 7, its mask could be:
 
 To find the legal digits for a cell, we do an OR operation on the row, column, and box masks, then invert the result and keep only the lowest 9 bits:
 
-```c
-NINE_BIT_MASK = 0b111111111
+```text
+NINE_BIT_MASK = 0x1FF
 used = row_mask[r] | col_mask[c] | box_mask[b]
 available = NINE_BIT_MASK & ~used
 ```
-
