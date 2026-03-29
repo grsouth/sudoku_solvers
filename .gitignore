@@ -1,1 +1,23 @@
-*.json
+# Editors
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# C
+/c/sudoku
+
+# Go
+/go/sudoku_go
+
+# Rust
+/rust/target/
+
+# Zig
+/.zig-cache/
+/zig/.zig-cache/
+/zig/sudoku_zig
+
+# Odin
+/odin/sudoku_odin
