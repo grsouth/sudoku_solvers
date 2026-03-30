@@ -102,7 +102,7 @@ used = row_mask[r] | col_mask[c] | box_mask[b]
 available = NINE_BIT_MASK & ~used
 ```
 
-# Speed Results
+## Speed Results
 
 To quickly benchmark the performance of each implementation, I ran each solver on two different puzzles, one easy and one hard. (The hard puzzle has fewer clues, which means the solver has to do more backtracking). Each solver ran the same puzzle a million times.
 
@@ -148,9 +148,9 @@ I don't have a good explanation for this, and not to be too much of a Rust apolo
 
 In any case, I don't want to jump to any conclusions and claim something like "Rust is slower than Go actually".
 
-# Development Experience and Language Quirks
+## Development Experience and Language Quirks
 
-## C
+### C
 
 The old tried and true. C is a language that I still have a lot of love for, despite its age and some of its rough edges. Have I simply been stockholm-syndromed by my early exposure to it? Maybe. Better the devil you know?
 
@@ -158,7 +158,7 @@ It seems to me like, at least in this very limited example, C is still the king 
 
 This project was very simple, perhaps *too* simple for any of the scary parts of C to rear their heads. I didn't have to deal with any multithreading, or any very complex data structures. I didn't really use any dynamic memory allocation, and my opportunities to shoot myself in the foot were pretty limited.
 
-## Zig
+### Zig
 
 Zig is interesting. With Odin it mostly delivered on the promise of being "almost as fast as C".
 
@@ -166,13 +166,13 @@ The syntax is a bit more verbose and felt quirky, for example, with its use of "
 
 It feels more modern in the sense that it's guiding me more towards a certain style, instead of just writing a series of statements. See the enforced "try" syntax for error handling, etc.
 
-## Odin
+### Odin
 
 Compared to Zig, Odin feels like more "natural" code. It feels a bit less verbose, and a bit more aesthetically similar to the "simplicity" I liked from C. I like using the := operator for variable declaration (as with Go).
 
 To me, this feels like a more natural "C replacement", whereas Zig feels more opinionated and explicit. I don't know if I have a firm answer on which one is "better" but I can understand why people prefer one to another. I think I personally prefer Odin to Zig.
 
-## Go
+### Go
 
 It might be a little unfair to bill Go as a "C replacement", because I don't think that it's exactly claiming to be. Go definitely feels like more of a general purpose language with a lot of modern programming conveniences baked in. I think "batteries included" is the term.
 
@@ -182,7 +182,7 @@ I really like the Go syntax, it's clean and straightforward. It feels understand
 
 I didn't really get to experience a lot of the things that Go is supposed to be good at, like easy concurrency with goroutines, and the rich standard library. I think the bigger the project is, the more I would like Go (and I already like it anyways.)
 
-## Rust
+### Rust
 
 Ah, Rust. It's the language people love to love and love to hate. I'll try not to step on any toes. I am very intrigued by Rust and the promises it makes about memory safety and performance.
 
@@ -190,7 +190,7 @@ Rust is, unsurprisingly, the most difficult to write of the bunch. Much has been
 
 If given the chance, I can see myself investing the time to learn Rust more deeply. I can see how immersing yourself in the memory-safe paradigm could eventually become second nature, and it could result in me naturally writing more reliable code. Maybe someday I'll get there. I don't want to give up on Rust.
 
-# Conclusion
+## Conclusion
 
 This was a fun way to get a taste of some languages that I've heard about, but barely played with. Given the limited scope of my little sudoku solver, I don't think it would be fair to draw any sweeping conclusions---especially about the performance characteristics in such a limited context.
 
